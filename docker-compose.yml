@@ -7,11 +7,11 @@ services:
       container_name: fsb
       environment:
       # required
-       - API_ID=0 # change this to your ID
-       - API_HASH=e83e839202 # change this to your HASH
-       - BOT_TOKEN=token # enter your bot token
-       - BIN_CHANNEL=ID # paste channel ID
+       - API_ID=3563028 # change this to your ID
+       - API_HASH=d119ea76a256e81446faacdb20a204d8 # change this to your HASH
+       - BOT_TOKEN=5061986561:AAEEdJOMA5VXixLnbKfCAPBKhqdpV6eZrvg # enter your bot token
+       - BIN_CHANNEL=-1001505575461 # paste channel ID
       ports:
-       - 127.0.0.1:8000:8000
+       - 127.0.0.1:8080:8080
       volumes:
        - $HOME/TG-FileStreamBot:/app/.env
