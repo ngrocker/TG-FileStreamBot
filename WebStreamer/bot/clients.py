@@ -3,23 +3,31 @@
 
 import asyncio
 import logging
+from os import environ
 from ..vars import Var
 from pyrogram import Client
-from WebStreamer.utils import TokenParser
-from . import multi_clients, work_loads, StreamBot
+from . import multi_clients, work_loads, sessions_dir, StreamBot
 
+logger = logging.getLogger("multi_client")
 
 async def initialize_clients():
     multi_clients[0] = StreamBot
     work_loads[0] = 0
-    all_tokens = TokenParser().parse_from_env()
+    all_tokens = dict(
+        (c + 1, t)
+        for c, (_, t) in enumerate(
+            filter(
+                lambda n: n[0].startswith("MULTI_TOKEN"), sorted(environ.items())
+            )
+        )
+    )
     if not all_tokens:
-        print("No additional clients found, using default client")
+        logger.info("No additional clients found, using default client")
         return
     
     async def start_client(client_id, token):
         try:
-            print(f"Starting - Client {client_id}")
+            logger.info(f"Starting - Client {client_id}")
             if client_id == len(all_tokens):
                 await asyncio.sleep(2)
                 print("This will take some time, please wait...")
@@ -29,18 +37,19 @@ async def initialize_clients():
                 api_hash=Var.API_HASH,
                 bot_token=token,
                 sleep_threshold=Var.SLEEP_THRESHOLD,
+                workdir=sessions_dir if Var.USE_SESSION_FILE else Client.PARENT_DIR,
                 no_updates=True,
-                in_memory=True
+                in_memory=not Var.USE_SESSION_FILE,
             ).start()
             work_loads[client_id] = 0
             return client_id, client
         except Exception:
-            logging.error(f"Failed starting Client - {client_id} Error:", exc_info=True)
+            logger.error(f"Failed starting Client - {client_id} Error:", exc_info=True)
     
     clients = await asyncio.gather(*[start_client(i, token) for i, token in all_tokens.items()])
     multi_clients.update(dict(clients))
     if len(multi_clients) != 1:
         Var.MULTI_CLIENT = True
-        print("Multi-Client Mode Enabled")
+        logger.info("Multi-client mode enabled")
     else:
-        print("No additional clients were initialized, using default client")
+        logger.info("No additional clients were initialized, using default client")

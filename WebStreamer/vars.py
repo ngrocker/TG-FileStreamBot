@@ -21,26 +21,15 @@ class Var(object):
     PORT = int(environ.get("PORT", 8080))
     BIND_ADDRESS = str(environ.get("WEB_SERVER_BIND_ADDRESS", "0.0.0.0"))
     PING_INTERVAL = int(environ.get("PING_INTERVAL", "1200"))  # 20 minutes
-    HAS_SSL = environ.get("HAS_SSL", False)
-    HAS_SSL = True if str(HAS_SSL).lower() == "true" else False
-    NO_PORT = environ.get("NO_PORT", False)
-    NO_PORT = True if str(NO_PORT).lower() == "true" else False
+    HAS_SSL = str(environ.get("HAS_SSL", "0").lower()) in ("1", "true", "t", "yes", "y")
+    NO_PORT = str(environ.get("NO_PORT", "0").lower()) in ("1", "true", "t", "yes", "y")
     HASH_LENGTH = int(environ.get("HASH_LENGTH", 6))
     if not 5 < HASH_LENGTH < 64:
         sys.exit("Hash length should be greater than 5 and less than 64")
-    if "DYNO" in environ:
-        ON_HEROKU = True
-        APP_NAME = str(environ.get("APP_NAME"))
-    else:
-        ON_HEROKU = False
-    FQDN = (
-        str(environ.get("FQDN", BIND_ADDRESS))
-        if not ON_HEROKU or environ.get("FQDN")
-        else APP_NAME + ".herokuapp.com"
-    )
-    if ON_HEROKU:
-        URL = f"https://{FQDN}/"
-    else:
-        URL = "http{}://{}{}/".format(
+    FQDN = str(environ.get("FQDN", BIND_ADDRESS))
+    URL = "http{}://{}{}/".format(
             "s" if HAS_SSL else "", FQDN, "" if NO_PORT else ":" + str(PORT)
         )
+    KEEP_ALIVE = str(environ.get("KEEP_ALIVE", "0").lower()) in  ("1", "true", "t", "yes", "y")
+    DEBUG = str(environ.get("DEBUG", "0").lower()) in ("1", "true", "t", "yes", "y")
+    USE_SESSION_FILE = str(environ.get("USE_SESSION_FILE", "0").lower()) in ("1", "true", "t", "yes", "y")
