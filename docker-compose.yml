@@ -12,6 +12,6 @@ services:
        - BOT_TOKEN=5061986561:AAFb6oo3zkfvlKqUW1Tu5eOgyu4siKY1SI8 # enter your bot token
        - BIN_CHANNEL=-1001675830553 # paste channel ID
       ports:
-       - 127.0.0.1:8080:8080
+       - 216.24.57.1:8080:8080
       volumes:
        - $HOME/TG-FileStreamBot:/app/.env
