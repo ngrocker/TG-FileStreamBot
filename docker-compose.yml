@@ -9,8 +9,8 @@ services:
       # required
        - API_ID=3563028 # change this to your ID
        - API_HASH=d119ea76a256e81446faacdb20a204d8 # change this to your HASH
-       - BOT_TOKEN=5061986561:AAEEdJOMA5VXixLnbKfCAPBKhqdpV6eZrvg # enter your bot token
-       - BIN_CHANNEL=-1001505575461 # paste channel ID
+       - BOT_TOKEN=5061986561:AAFb6oo3zkfvlKqUW1Tu5eOgyu4siKY1SI8 # enter your bot token
+       - BIN_CHANNEL=-1001675830553 # paste channel ID
       ports:
        - 127.0.0.1:8080:8080
       volumes:
